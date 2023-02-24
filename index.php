@@ -14,11 +14,11 @@
             <tr>
                 <td>No. Recibo:</td>
                 <td>
-                    <input/>
+                    <input id="recibo"/>
                 </td>
                 <td>No. Documento:</td>
                 <td>
-                    <input/>
+                    <input id="documento"/>
                 </td>
             </tr>
             <tr>
@@ -29,31 +29,31 @@
             <tr>
                 <td>Cliente:</td>
                 <td>
-                    <input/>
+                    <input id="cliente"/>
                 </td>
                 <td>Ruc:</td>
                 <td>
-                    <input/>
+                    <input id="ruc"/>
                 </td>
             </tr>
             <tr>
                 <td>Dirección:</td>
                 <td>
-                    <input/>
+                    <input id="direccion"/>
                 </td>
                 <td>Teléfonos:</td>
                 <td>
-                    <input/>
+                    <input id="telefonos"/>
                 </td>
             </tr>
             <tr>
                 <td>Concepto:</td>
                 <td>
-                    <input/>
+                    <input id="concepto"/>
                 </td>
                 <td>Fecha:</td>
                 <td>
-                    <input/>
+                    <input id="fecha"/>
                 </td>
             </tr>
             <tr>
@@ -104,19 +104,25 @@
             <tr>
                 <td>SON:</td>
                 <td>
-                    <input />
+                    <input id="son"/>
                 </td>
             </tr>
             <tr>
                 <td>Valor:</td>
                 <td>
-                    <input />
+                    <input id="valor"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Pendiente:</td>
+                <td>
+                    <input id="pendiente"/>
                 </td>
             </tr>
             <tr>
                 <td>Usuario:</td>
                 <td>
-                    <input />
+                    <input id="usuario"/>
                 </td>
             </tr>
         </table>
@@ -131,34 +137,76 @@
                 addRow();
             });
 
+            $('#crear').click(function(e) {
+                e.preventDefault();
+                create();
+            });
+
             $("table tbody").find('input[type=text]').filter(':visible:first').focus();
         });
+
         function addRow() {
-            var total = $("#table tbody tr").length + 1;
-            var Baris = '<tr>';
-            Baris += '<td>';
-            Baris += '<input id="tipo_'+total+'" name="tipo_'+total+'"/>';
-            Baris += '</td>';
-            Baris += '<td>';
-            Baris += '<input id="banco_'+total+'" name="banco_'+total+'"/>';
-            Baris += '</td>';
-            Baris += '<td>';
-            Baris += '<input id="documento_'+total+'" name="documento_'+total+'"/>';
-            Baris += '</td>';
-            Baris += '<td>';
-            Baris += '<input id="factura_'+total+'" name="factura_'+total+'"/>';
-            Baris += '</td>';
-            Baris += '<td>';
-            Baris += '<input id="fecha_'+total+'" name="fecha_'+total+'"/>';
-            Baris += '</td>';
-            Baris += '<td>';
-            Baris += '<input id="valor_'+total+'" name="valor_'+total+'"/>';
-            Baris += '</td>';
-            Baris += '</tr>';
-            $("#table tbody").append(Baris);
+            var rows_num = $("#table tbody tr").length;
+            var new_row = '<tr>';
+            new_row += '<td>';
+            new_row += '<input id="tipo_'+(rows_num)+'" name="tipo_'+(rows_num)+'"/>';
+            new_row += '</td>';
+            new_row += '<td>';
+            new_row += '<input id="banco_'+(rows_num)+'" name="banco_'+(rows_num)+'"/>';
+            new_row += '</td>';
+            new_row += '<td>';
+            new_row += '<input id="documento_'+(rows_num)+'" name="documento_'+(rows_num)+'"/>';
+            new_row += '</td>';
+            new_row += '<td>';
+            new_row += '<input id="factura_'+(rows_num)+'" name="factura_'+(rows_num)+'"/>';
+            new_row += '</td>';
+            new_row += '<td>';
+            new_row += '<input id="fecha_'+(rows_num)+'" name="fecha_'+(rows_num)+'"/>';
+            new_row += '</td>';
+            new_row += '<td>';
+            new_row += '<input id="valor_'+(rows_num)+'" name="valor_'+(rows_num)+'"/>';
+            new_row += '</td>';
+            new_row += '</tr>';
+            $("#table tbody").append(new_row);
             $("#table tbody tr").each(function() {
                 $(this).find('td:nth-child(2) input').focus();
             });
+        }
+
+        function create() {
+            var rows_num = $('#table tbody tr').length;
+
+            let json = "{";
+            json += `"recibo":"${$('#recibo').val()}",`;
+            json += `"documento":"${$('#documento').val()}",`;
+            json += `"cliente":"${$('#cliente').val()}",`;
+            json += `"ruc":"${$('#ruc').val()}",`;
+            json += `"direccion":"${$('#direccion').val()}",`;
+            json += `"telefonos":"${$('#telefonos').val()}",`;
+            json += `"concepto":"${$('#concepto').val()}",`;
+            json += `"fecha":"${$('#fecha').val()}",`;
+            json += `"pagos":[`;
+                for(var i=0; i<rows_num; i++){
+                    json += "{";
+                    json += `"tipo":"${$('#tipo_'+(i)).val()}",`;
+                    json += `"banco":"${$('#banco_'+(i)).val()}",`;
+                    json += `"documento":"${$('#documento_'+(i)).val()}",`;
+                    json += `"factura":"${$('#factura_'+(i)).val()}",`;
+                    json += `"fecha":"${$('#fecha_'+(i)).val()}",`;
+                    json += `"valor":"${$('#valor_'+(i)).val()}"`;
+                    json += "}";
+                    if(i < (rows_num - 1)){
+                        json += `,`;
+                    }
+                }
+            json += `],`;
+            json += `"son":"${$('#son').val()}",`;
+            json += `"valor":"${$('#valor').val()}",`;
+            json += `"pendiente":"${$('#pendiente').val()}",`;
+            json += `"usuario":"${$('#usuario').val()}"`;
+            json += "}";
+
+            window.location.href = 'recibo.php?data='+json;
         }
     </script>
 </body>
